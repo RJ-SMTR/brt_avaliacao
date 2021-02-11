@@ -39,7 +39,7 @@ def main():
         satis_estacao.rename(
             columns={"seriedade_simples": "Status", "nome_estacao": "Estação"}
         )
-        .sort_values(by="ordem_seriedade", ascending=False)[["Estação", "Status"]]
+        .sort_values(by="Estação", ascending=True)[["Estação", "Status"]]
         .assign(hack="")
         .set_index("hack")
     )

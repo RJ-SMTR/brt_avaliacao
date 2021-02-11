@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import json
 import base64
+import datetime
 
 
 def decogind_base64(message):
@@ -30,7 +31,12 @@ def get_credentials():
 
 
 @st.cache(allow_output_mutation=True)
-def query_gbq(query, project_id="rj-smtr", update=1):
+def query_gbq(
+    query,
+    project_id="rj-smtr",
+    update=1,
+    time=datetime.datetime.now().strftime("%Y-%m-%d-%H"),
+):
 
     return pd.read_gbq(
         query,

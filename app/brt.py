@@ -3,6 +3,16 @@ import visao_geral
 import estacao
 import responsavel
 
+# Hide Menu
+hide_streamlit_style = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style>
+
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 st.title("Avaliação das estações BRT")
 
 option = st.selectbox("Selecione uma visão", ["Geral", "Estações", "Responsáveis"])
