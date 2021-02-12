@@ -13,18 +13,20 @@ footer {visibility: hidden;}
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+st.image("imgs/smtr-logo.jpeg")
+
 st.title("Avaliação das estações BRT")
 
-option = st.selectbox("Selecione uma visão", ["Geral", "Estações", "Responsáveis"])
 
-if option == "Geral":
+res = st.radio("Selecione uma Visão", ["Geral", "Estações", "Responsáveis"])
 
+
+if res == "Geral":
     visao_geral.main()
 
-elif option == "Estações":
 
+elif res == "Estações":
     estacao.main()
 
-elif option == "Responsáveis":
-
+else:
     responsavel.main()

@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from utils import query_gbq
+from utils import query_gbq, highlight_by_column
 
 
 def main():
@@ -66,14 +66,13 @@ def main():
                 }
             )
             .sort_values(by="Status", ascending=False)
-            .assign(hack="")
-            .set_index("hack")[["Estação", "Status"]]
+            .set_index("Estação")[["Status"]]
         )
 
         if len(entorno):
             st.subheader("Estação Entorno")
 
-            st.dataframe(entorno)
+            st.dataframe(highlight_by_column(entorno, "Status"))
 
         dentro = (
             problemas_selecionados.query('categoria_problema == "Interno"')
@@ -84,15 +83,14 @@ def main():
                 }
             )
             .sort_values(by="Status", ascending=False)
-            .assign(hack="")
-            .set_index("hack")[["Estação", "Status"]]
+            .set_index("Estação")[["Status"]]
         )
 
         if len(dentro):
 
             st.subheader("Estação Dentro")
 
-            st.dataframe(dentro)
+            st.dataframe(highlight_by_column(dentro, "Status"))
     else:
 
         st.warning(f"Não existem avaliações negativas")

@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from utils import query_gbq
+from utils import query_gbq, highlight_by_column
 
 
 def main():
@@ -37,7 +37,6 @@ def main():
     )
 
     idade_resposta = estacao["idade_resposta_dia"].unique()[0]
-    print(type(idade_resposta))
     if np.isnan(idade_resposta):
         st.error(f"#### Esta estação ainda não foi inspecionada")
     elif isinstance(idade_resposta, float):
@@ -62,29 +61,34 @@ def main():
         st.subheader("Avaliações Entorno")
 
         st.dataframe(
-            estacao.query('categoria_problema == "Externo"')
-            .rename(
-                columns={
-                    "nome_problema_simples": "Problema",
-                    "seriedade_simples": "Status",
-                }
+            highlight_by_column(
+                estacao.query('categoria_problema == "Externo"')
+                .rename(
+                    columns={
+                        "nome_problema_simples": "Problema",
+                        "seriedade_simples": "Status",
+                    }
+                )
+                .sort_values(by="Status", ascending=False)
+                .set_index("Problema")[["Status"]],
+                "Status",
             )
-            .sort_values(by="Status", ascending=False)
-            .assign(hack="")
-            .set_index("hack")[["Problema", "Status"]]
         )
 
         st.subheader("Avaliações Dentro")
 
         st.dataframe(
-            estacao.query('categoria_problema == "Interno"')
-            .rename(
-                columns={
-                    "nome_problema_simples": "Problema",
-                    "seriedade_simples": "Status",
-                }
+            highlight_by_column(
+                estacao.query('categoria_problema == "Interno"')
+                .rename(
+                    columns={
+                        "nome_problema_simples": "Problema",
+                        "seriedade_simples": "Status",
+                    }
+                )
+                .sort_values(by="Status", ascending=False)
+                .assign(hack="")
+                .set_index("Problema")[["Status"]],
+                "Status",
             )
-            .sort_values(by="Status", ascending=False)
-            .assign(hack="")
-            .set_index("hack")[["Problema", "Status"]]
         )

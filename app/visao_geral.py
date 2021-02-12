@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from utils import query_gbq
+from utils import query_gbq, highlight_by_index
 
 
 def main():
@@ -26,23 +26,17 @@ def main():
         st.write(f"##### {corredor}")
 
         st.dataframe(
-            satis_corredor.query(f'corredor_estacao == "{corredor}"')
-            .rename(
-                columns={"seriedade_simples": "Status", "nome_estacao": "# Estações"}
-            )[["Status", "# Estações"]]
-            .set_index("Status")
+            highlight_by_index(
+                satis_corredor.query(f'corredor_estacao == "{corredor}"')
+                .rename(
+                    columns={
+                        "seriedade_simples": "Status",
+                        "nome_estacao": "# Estações",
+                    }
+                )[["Status", "# Estações"]]
+                .set_index("Status")
+            )
         )
-
-    st.subheader("Satisfação por Estação")
-
-    st.dataframe(
-        satis_estacao.rename(
-            columns={"seriedade_simples": "Status", "nome_estacao": "Estação"}
-        )
-        .sort_values(by="Estação", ascending=True)[["Estação", "Status"]]
-        .assign(hack="")
-        .set_index("hack")
-    )
 
     st.subheader("Satisfação por Responsável")
 
@@ -55,13 +49,18 @@ def main():
         st.write(f"##### {responsavel}")
 
         st.dataframe(
-            satis_responsavel.query(f'nome_exibicao_responsavel == "{responsavel}"')
-            .query('seriedade_simples != "Sem Avaliação"')
-            .groupby(["nome_exibicao_responsavel", "seriedade_simples"])
-            .count()
-            .reset_index()
-            .rename(
-                columns={"seriedade_simples": "Status", "nome_estacao": "# Estações"}
-            )[["Status", "# Estações"]]
-            .set_index("Status")
+            highlight_by_index(
+                satis_responsavel.query(f'nome_exibicao_responsavel == "{responsavel}"')
+                .query('seriedade_simples != "Sem Avaliação"')
+                .groupby(["nome_exibicao_responsavel", "seriedade_simples"])
+                .count()
+                .reset_index()
+                .rename(
+                    columns={
+                        "seriedade_simples": "Status",
+                        "nome_estacao": "# Estações",
+                    }
+                )[["Status", "# Estações"]]
+                .set_index("Status")
+            )
         )
